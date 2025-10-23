@@ -3,7 +3,7 @@ const toggleBtn = document.getElementById("theme-toggle");
 // Load saved theme
 if (localStorage.getItem("theme") === "dark") {
   document.body.classList.add("dark");
-  toggleBtn.textContent = "☀️ Light Mode";
+  toggleBtn.textContent = "🌙 Dark Mode";
 }
 
 toggleBtn.addEventListener("click", () => {
@@ -11,10 +11,10 @@ toggleBtn.addEventListener("click", () => {
 
   if (document.body.classList.contains("dark")) {
     localStorage.setItem("theme", "dark");
-    toggleBtn.textContent = "☀️ Light Mode";
+    toggleBtn.textContent = "🌙 Dark Mode";
   } else {
     localStorage.setItem("theme", "light");
-    toggleBtn.textContent = "🌙 Dark Mode";
+    toggleBtn.textContent = "☀️ Light Mode";
   }
 });
 
