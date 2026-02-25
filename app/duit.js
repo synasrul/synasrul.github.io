@@ -13,17 +13,33 @@ const GAS_URL = import.meta.env.VITE_GAS_URL;
 /* ======================
    LOGIN COMPONENT
 ====================== */
+// ===== SHA-256 HASH FUNCTION =====
+async function hashPassword(password, salt) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password + salt);
+
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Username & Password Sederhana (bisa diganti ke database nanti)
-    if (username === 'admin' && password === 'Nasrul0912') {
+    const SALT = "DuitApp";
+
+    const inputHash = await hashPassword(password, SALT);
+    const STORED_HASH = "04677b475086f2308fdf389144be88343129ca8f1ffd463aa06cc1f20936d61a";
+
+
+    if (username === 'admin' && inputHash === STORED_HASH) {
+    // if (username === 'admin' && password === 'Nasrul0912') {
       localStorage.setItem('isLoggedIn', 'true');
       onLogin();
     } else {
@@ -95,6 +111,12 @@ const Login = ({ onLogin }) => {
 const Modal = ({ type, message, onClose }) => {
   // Auto close 2 detik jika success
   useEffect(() => {
+    // const generate = async () => {
+    //   const hash = await hashPassword("password", "DuitApp");
+    //   console.log("HASH:", hash);
+    // };
+  // generate();
+    
     if (type === 'success' && message) {
       const timer = setTimeout(() => {
         onClose();
